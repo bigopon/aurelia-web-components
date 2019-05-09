@@ -78,6 +78,12 @@ export interface ICustomElementInfo {
   classDefinition: Function;
 }
 
+export interface ICustomAttributeInfo {
+  attrName: string;
+  behavior: HtmlBehaviorResource;
+  classDefinition: Function;
+}
+
 export interface IGetterFunction {
   (): any;
   getObserver?(obj: any): InternalPropertyObserver;
@@ -92,11 +98,18 @@ export interface ICustomHtmlRegistry {
    * Register a class as a custom html component: element/attribute
    * @returns Mapped class of view model class to be used as custom element/custom attribute
    */
-  register(behavior: Function): Promise<Function>;
+  register(Type: Function): Function | Promise<Function>;
+
+  /**
+   * Get custom element info based on element name
+   */
+  get(elementName: string): ICustomElementInfo | ICustomAttributeInfo | undefined;
 
   /**
    * Returns `true` if the registry has given behavior registered
    */
-  has(behavior: Function): boolean;
+  has(Type: Function): boolean;
 
 }
+
+export type IRootNode = Document | DocumentFragment;

@@ -1,6 +1,6 @@
 import { Container } from 'aurelia-dependency-injection';
 import { HtmlBehaviorResource, ViewCompiler, ViewResources, ViewFactory } from 'aurelia-templating';
-import { createWebComponentClassFromBehavior } from './custom-element-utilities';
+import { createWebComponentClassFromBehavior } from './utilities-custom-element';
 import './interface';
 import { ICustomElementInfo, ICustomHtmlRegistry } from './interface';
 import { tagNameOf } from './utilities';
@@ -8,6 +8,7 @@ import { metadata } from 'aurelia-metadata';
 
 export class CustomElementRegistry implements ICustomHtmlRegistry {
 
+  /**@internal */
   static inject = [Container, ViewCompiler, ViewResources];
 
   /**
@@ -61,15 +62,15 @@ export class CustomElementRegistry implements ICustomHtmlRegistry {
     );
     tagName = tagName || tagNameOf(behavior);
 
+    if (tagName.indexOf('-') === -1) {
+      tagName = this.fallbackPrefix + tagName;
+    }
+
     const info: ICustomElementInfo = this._lookup[tagName] = {
       tagName: tagName,
       behavior: behavior,
       classDefinition: classDefinition
     };
-
-    if (tagName.indexOf('-') === -1) {
-      tagName = this.fallbackPrefix + tagName;
-    }
 
     customElements.define(tagName, classDefinition);
 
@@ -92,6 +93,10 @@ export class CustomElementRegistry implements ICustomHtmlRegistry {
     return htmlBehaviorResource
       .load(this.container, Type)
       .then(() => customElementInfo.classDefinition);
+  }
+
+  get(elementName: string): ICustomElementInfo {
+    return this._lookup[elementName];
   }
 
   has(Type: Function): boolean {

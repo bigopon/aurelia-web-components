@@ -1,7 +1,7 @@
 export {
   CustomElementRegistry
-} from './custom-element-registry';
+} from './registry-custom-element';
 
-// export {
-//   CustomAttributeRegistry
-// } from './custom-attribute-registry';
+export {
+  CustomAttributeRegistry
+} from './registry-custom-attribute';
